@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.roots.cms.dao.IPermissionDao">
+    <resultMap id="PermissionMap" type="com.roots.cms.entity.PermissionEntity">
+        <id property="permissionId" column="permission_id"/>
+        <result property="name" column="name"/>
+        <result property="url" column="url"/>
+        <result property="perms" column="perms"/>
+        <result property="description" column="description"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="type" column="type"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="icon" column="icon"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="PermissionVo" >
+        permission_id, name, description, url, perms, parent_id, type, order_num, icon, status, create_time, update_time
+    </sql>
+
+    <select id="selectPermsByUserId" resultType="java.lang.String">
+        select distinct p.perms from permission p left join role_permission rp on
+        p.permission_id = rp.permission_id left join user_role ur on rp.role_id = ur.role_id
+        where ur.user_id = #{userId} and p.perms is not null and p.perms != '' and p.status = 0
+    </select>
+
+    <select id="selectAllPerms" parameterType="java.lang.Integer" resultMap="PermissionMap">
+        select <include refid="PermissionVo"/> from permission where status = #{status} order by order_num
+    </select>
+
+    <select id="selectPerms" resultMap="PermissionMap">
+        select <include refid="PermissionVo"/> from permission
+        <if test="status != null">
+            where status = 0
+        </if>
+        <if test="permsName != null and permsName != '' ">
+            and name like concat('%', #{permsName}, '%')
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != '' ">
+            and u.crate_time between #{beginTime} to #{endTime}
+        </if>
+    </select>
+
+    <select id="selectPermsByRoleId" parameterType="Long" resultMap="PermissionMap">
+        select p.permission_id,p.name,p.parent_id from role_permission rp
+        left join permission p on rp.permission_id = p.permission_id
+        where rp.role_id = #{roleId} and p.status = 0
+    </select>
+
+    <select id="selectSubPermsByPermissionId" parameterType="long" resultType="long">
+        select count(p2.permission_id) from permission p1 left join permission p2 on p1.permission_id = p2.parent_id and p2.status = 0
+        where p1.permission_id = #{permissionId}
+    </select>
+
+    <select id="selectByPermissionId" parameterType="long" resultMap="PermissionMap">
+        select <include refid="PermissionVo"/> from permission
+        where permission_id = #{permissionId}
+    </select>
+</mapper>

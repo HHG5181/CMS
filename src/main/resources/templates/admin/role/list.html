@@ -1,0 +1,130 @@
+<div class="layui-card" style="background: #f5f7f9;">
+
+    <div class="layui-card-header layui-anim layui-anim-fadein notselect"  style="background: #fff;">
+        <span class="rt-icon icon-right-2"></span>
+        <span class="text-black">角色列表</span>
+        <div class="pull-right"></div>
+    </div>
+    <div class="layui-card-body">
+        <div class="think-box-shadow">
+
+            <div class="table-top-box">
+                <fieldset>
+
+                    <legend>条件搜索</legend>
+
+                    <form class="layui-form form-search" action="/admin/user/list?spm=m-0-02" onsubmit="return false" method="post" autocomplete="off">
+                        <div class="layui-form-item layui-inline layui-form-pane ">
+                            <label class="layui-form-label">账号信息</label>
+                            <div class="layui-input-inline">
+                                <input name="userName" value="" class="rt-input" placeholder="请输入用户名">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-inline layui-form-pane">
+                            <label class="layui-form-label">状态</label>
+                            <div class="layui-input-inline">
+                                <select class="layui-select" name="status">
+                                    <option selected value="">-- 全部 --</option>
+                                    <option value="0">正常</option>
+                                    <option value="1">禁用</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-inline layui-form-pane">
+                            <label class="layui-form-label">创建时间</label>
+                            <div class="layui-input-inline">
+                                <input data-date-input="date" data-range name="createTime" value="" placeholder="请选择创建日期" class="rt-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-inline">
+                            <button class="rt-btn bg-gray"><i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </form>
+                </fieldset>
+
+                <script>window.form.render()</script>
+                <div class="table-top-right">
+                    <button data-action='/admin/role/batch/delete' data-confirm="确定要删除这些角色吗？" data-rule="ids#{key}" data-title="批量删除" data-csrf="csrf5f35885441d053119" class='rt-btn'>批量删除</button>
+                    <button data-modal='/admin/role/add' data-title="添加角色" class='rt-btn rt-blue' data-csrf="csrf5f35885441e926837">添加角色</button>
+                </div>
+            </div>
+            <table class="layui-table margin-top-10" lay-skin="line">
+                <thead>
+                <tr>
+                    <th class='list-table-check-td think-checkbox'>
+                        <input data-auto-none data-check-target='.list-check-box' type='checkbox' class="rt-input">
+                    </th>
+                    <th class='text-left nowrap'>信息</th>
+                    <th class='text-left nowrap'>key</th>
+                    <th class='text-left nowrap'>创建时间</th>
+                    <th class='text-center nowrap' width="60">使用状态</th>
+                    <th class='text-center nowrap' width="60">描述</th>
+                    <th class='text-left nowrap'></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="role:${ipage.getRecords()}" >
+                    <td class='list-table-check-td think-checkbox'>
+                        <input class="list-check-box rt-input" th:value='${role.roleId}' type='checkbox'>
+                    </td>
+                    <td class='text-left nowrap'>
+                        <span class="rt-text-blue rt-text-bold" th:text="${role.roleName}"></span><br/>
+                    </td>
+                    <td class='text-left nowrap'>
+                        <span class="rt-text-blue rt-text-bold" th:text="${role.roleKey}"></span><br/>
+                    </td>
+                    <td class='text-left nowrap'><span class="rt-text-grey" th:text="${#dates.format(role.createTime, 'yyyy-MM-dd HH:mm')}"></span></td>
+                    <td class='text-center nowrap' th:if="${role.status eq 0}">
+                        <a class="rt-tag rt-green dark" data-action="/admin/role/change_status" th:data-value="'roleId#'+${role.roleId}" data-csrf="csrf5f35885441f6f6213">使用中</a>
+                    </td>
+                    <td class='text-center nowrap' th:if="${role.status eq 1}">
+                        <a class="rt-tag rt-red dark" data-action="/admin/role/change_status" th:data-value="'roleId#'+${role.roleId}" data-csrf="csrf5f35885441f6f6213">禁用</a>
+                    </td>
+                    <td class='text-center nowrap'>
+                        <span class="text-red" th:text="${role.description}"></span>
+                    </td>
+                    <td class='text-right nowrap'>
+                        <span class="rt-btn xs" data-title="授权"  th:data-modal='@{/admin/role/apply(roleId=${role.roleId})}' data-csrf="csrf5f35885441f9f9937">授权</span>
+                        <span class="rt-btn xs" data-title="编辑角色" th:data-modal='@{/admin/role/edit(roleId=${role.roleId})}'><i class="rt-icon icon-edit" data-csrf="csrf5f35885441fc85357"></i></span>
+                        <span class="rt-btn xs" data-confirm="确定要删除该角色吗？" data-action="/admin/role/delete" th:data-value="'roleId#'+${role.roleId}"><i class="rt-icon icon-del" data-csrf="csrf5f35885441fef9555"></i></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class='pagination-container nowrap'>
+                <span>共 </span>
+                <span th:text="${ipage.getTotal()}"></span>
+                <span>
+                    条记录，每页显示
+                    <select onchange='location.href=this.options[this.selectedIndex].value' data-auto-none>
+                        <option data-num='10' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=10' selected>10</option>
+                        <option data-num='20' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=20' >20</option>
+                        <option data-num='30' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=30' >30</option>
+                        <option data-num='40' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=40' >40</option>
+                        <option data-num='50' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=50' >50</option>
+                        <option data-num='60' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=60' >60</option>
+                        <option data-num='70' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=70' >70</option>
+                        <option data-num='80' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=80' >80</option>
+                        <option data-num='90' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=90' >90</option>
+                        <option data-num='100' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=100' >100</option>
+                        <option data-num='150' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=150' >150</option>
+                        <option data-num='200' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=200' >200</option>
+                        <option data-num='300' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=300' >300</option>
+                        <option data-num='500' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=500' >500</option>
+                        <option data-num='1000' value='/index#/admin/role/list?spm=m-1-2&pageNum=1&pageSize=1000' >1000</option>
+                    </select> 条，共
+                    <span th:text="${ipage.getPages()}"></span> 页当前显示第 <span th:text="${ipage.getCurrent()}"></span> 页。
+                    <div class='layui-box layui-laypage layui-laypage-default'>
+                    <a class="layui-laypage-prev layui-disabled" >上一页</a>
+                        <span class="layui-laypage-curr">
+                            <em class="layui-laypage-em" style="background-color:#007bff;color:#fff;"></em>
+                            <em style="color:#fff;">1</em></span>
+                        <a class="layui-laypage-prev layui-disabled" >下一页</a>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roots.cms.dao.ICategoryDao">
+    <resultMap id="CategoryResult" type="com.roots.cms.entity.CategoryEntity">
+        <result property="id" column="id"/>
+        <result property="pid" column="pid"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="sort" column="sort"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="icon" column="icon"/>
+        <association property="parent" javaType="com.roots.cms.entity.CategoryEntity">
+            <result property="id" column="p_id"/>
+            <result property="pid" column="p_pid"/>
+            <result property="name" column="p_name"/>
+            <result property="description" column="p_description"/>
+            <result property="status" column="p_status"/>
+            <result property="icon" column="p_icon"/>
+        </association>
+        <collection property="children" javaType="ArrayList" ofType="com.roots.cms.entity.CategoryEntity">
+            <result property="id"  column="n_id"/>
+            <result property="pid" column="n_pid"/>
+            <result property="name" column="n_name"/>
+            <result property="description" column="n_description"/>
+            <result property="status" column="n_status"/>
+            <result property="icon" column="n_icon"/>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_List">
+		id,
+		pid,
+		name,
+		description,
+		sort,
+		status,
+		icon,
+		create_time,
+		update_time
+	</sql>
+
+    <select id="selectCategories" parameterType="com.roots.cms.entity.CategoryEntity">
+        select
+    </select>
+</mapper>

@@ -1,0 +1,60 @@
+<form class="layui-form layui-card" action="/admin/user/add" data-auto="true" method="post" autocomplete="off">
+    <div class="layui-card-body">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs8">
+                <div class="layui-col-xs12">
+                    <label class="block relative">
+                        <span class="rt-text-blue rt-text-bold">登录账号</span>
+                        <span class="rt-text-grey margin-left-5">Username</span>
+                        <input name="username" value='' required pattern="^.{4,}$" placeholder="请输入登录用户账号" class="layui-input">
+                        <span class="help-block">登录账号不能重复</span>
+                    </label>
+                </div>
+                <div class="layui-col-xs12">
+                    <label class="block relative">
+                        <span class="rt-text-blue rt-text-bold">用户昵称</span>
+                        <span class="rt-text-grey margin-left-5">Nickname</span>
+                        <input name="nickname" value='' required placeholder="请输入用户的昵称" class="layui-input">
+                        <span class="help-block">用户显示的账号别名，请尽量保持不要重复</span>
+                    </label>
+                </div>
+            </div>
+            <div class="layui-col-xs4">
+                <input name="img" type="hidden" value="{$vo.head_pic|default=''}">
+                <div class="uploadimage-box">
+                    <div class="uploadimage-btn" style="" data-upload-img data-upload="1" data-file-key='head_pic'></div>
+                    <span data-tips-image="{$vo.head_pic|default=''}">预览</span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <span class="rt-text-blue rt-text-bold">角色配置</span>
+            <span class="rt-text-grey margin-left-5">RoleAssign</span>
+            <div class="layui-textarea">
+                <span class="rt-text-grey">超级用户不需要配置权限</span>
+                <span class="rt-text-grey">未配置权限</span>
+                <br/>
+                <label th:each="role:${roles}" class="think-checkbox layui-unselect">
+                    <input type="checkbox" name="roleIds" th:value="${role.roleId}" lay-ignore class="rt-input">
+                    <span th:text="${role.roleName}"></span>
+                    <br/>
+                </label>
+            </div>
+        </div>
+        <label class="layui-form-item block relative">
+            <span class="rt-text-blue rt-text-bold">用户备注</span><span class="rt-text-grey margin-left-5">Remark</span>
+            <textarea placeholder="请输入用户备注" class="layui-textarea" name="remark"></textarea>
+        </label>
+        <div class="hr-line-dashed"></div>
+        <div class="layui-form-item text-center">
+            <button class="rt-btn rt-blue" type='submit'>保存</button>
+            <button class="rt-btn" type='button' data-close>取消</button>
+        </div>
+    </div>
+</form>
+
+<style>
+    .uploadimage-box{
+        margin: 0 auto;
+    }
+</style>

@@ -1,0 +1,36 @@
+<form class="layui-form layui-card" action="/admin/role/add" data-auto="true" method="post" autocomplete="off">
+    <div class="layui-card-body">
+        <div class="layui-form-item">
+            <label class="relative block label-required-prev">
+                <span class="rt-text-blue rt-text-bold">角色Key</span>
+                <span class="rt-text-grey margin-left-5">RoleKey</span>
+                <input name="roleKey" value="" required="" pattern="^.{2,}$" placeholder="请输入角色Key" class="rt-input validate-error error-text">
+            </label>
+        </div>
+        <div class="layui-form-item">
+            <label class="relative block label-required-prev">
+                <span class="rt-text-blue rt-text-bold">角色名称</span>
+                <span class="rt-text-grey margin-left-5">RoleName</span>
+                <input name="roleName" value="" required="" pattern="^.{2,}$" placeholder="请输入角色名称" class="rt-input validate-error error-text">
+            </label>
+        </div>
+        <div class="layui-form-item">
+            <label class="relative block">
+                <span class="rt-text-blue rt-text-bold">描述</span>
+                <span class="rt-text-grey margin-left-5">Description</span>
+                <textarea placeholder="请输入描述" class="rt-textarea" name="description"></textarea>
+            </label>
+        </div>
+        <div class="hr-line-dashed"></div>
+        <div class="layui-form-item text-center">
+            <button class="rt-btn rt-blue" type='submit'>保存</button>
+            <button class="rt-btn" type='button' data-close>取消</button>
+        </div>
+    </div>
+</form>
+
+<style>
+    .uploadimage-box{
+        margin: 0 auto;
+    }
+</style>

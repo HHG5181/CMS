@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.roots.cms.dao.IRoleDao">
+
+    <resultMap id="RoleResult" type="com.roots.cms.entity.RoleEntity">
+        <id     property="roleId"       column="role_id"        />
+        <result property="roleName"     column="role_name"      />
+        <result property="roleKey"      column="role_key"       />
+        <result property="description"      column="description"       />
+        <result property="createTime"     column="create_time"      />
+        <result property="updateTime"    column="update_time"     />
+        <result property="status"       column="status"    />
+    </resultMap>
+
+    <sql id="Role_List">
+        role_id, role_name, role_key, description, status, create_time, update_time
+    </sql>
+
+    <select id="selectRoleKeyByUserId" resultType="java.lang.String">
+        select r.role_key from role r left join user_role ur on r.role_id = ur.role_id
+        where ur.user_id = #{userId}
+    </select>
+
+    <select id="selectRoleEntities" resultMap="RoleResult">
+        select <include refid="Role_List" /> from  role where status = 0
+    </select>
+
+    <select id="selectRolesByUserId" resultType="java.lang.String">
+        select r.role_id from role r left join user_role ur on r.role_id = ur.role_id
+        where ur.user_id = #{userId}
+    </select>
+
+    <select id="selectRoles" parameterType="com.roots.cms.entity.RoleEntity" resultMap="RoleResult">
+        select <include refid="Role_List"/> from role
+        <if test="status != null">
+            where status = 0
+        </if>
+        <if test="roleName != null and role.roleName != '' ">
+            and name like concat('%', #{role.roleName}, '%')
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != '' ">
+            and u.crate_time between #{beginTime} to #{endTime}
+        </if>
+    </select>
+
+    <select id="selectUsersByRoleIds" resultMap="RoleResult">
+        select u.user_id, u.user_name, u.nick_name, u.password, u.salt, u.status, u.img, u.login_ip, u.last_login_time, u.create_time, u.update_time, u.remark
+        from user u inner join user_role ur on u.user_id = ur.user_id
+        where ur.role_id in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectPerms" resultType="java.lang.Long">
+        select permission_id from role_permission where role_id = #{roleId}
+    </select>
+</mapper>

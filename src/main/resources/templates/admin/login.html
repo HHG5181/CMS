@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>CMS</title>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1929822_0clisragfuc.css">
+    <link rel="stylesheet" href="/plugs/layui/css/layui.css">
+    <link rel="stylesheet" href="/common/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <script src="/plugs/jquery/pace.min.js"></script>
+</head>
+<body>
+<div class="login-container">
+    <form data-login-form onsubmit="return false;" method="post" class="" autocomplete="off">
+        <div class="form-header">CMS后台管理</div>
+        <div class="form-item">
+            <label>
+                <i class="icon rt-icon icon-user-3"></i>
+                <input required pattern="^\S{4,}$" value="" maxlength="16" name="username"  autocomplete="off" placeholder="请输入账号" class="rt-input">
+            </label>
+        </div>
+        <div class="form-item">
+            <label>
+                <i class="icon rt-icon icon-password"></i>
+                <input  pattern="^\S{4,}$" maxlength="16" value="" name="password" type="password" autocomplete="off" placeholder="请输入密码" class="rt-input">
+            </label>
+        </div>
+        <div class="form-item verify layui-hide">
+            <label class="inline">
+                <i class="icon rt-icon icon-verify"></i>
+                <input class="rt-input" required pattern="^\S{4,}$" name="verify" maxlength="4" autocomplete="off" placeholder="验证码" title="请输入验证码">
+            </label>
+            <label th:data-captcha="@{/verify}" data-field-verify="verify" data-field-uniqid="uniqid" data-captcha-type="{$captchaType}" data-captcha-token="{$captchaToken}"></label>
+        </div>
+        <div class="form-item">
+            <input type="hidden" name="skey" value="{$loginskey|default=''}">
+            <button type="submit" class="rt-btn rt-blue lg full-width" disabled data-btn-loaded="立即登入">正在加载</button>
+        </div>
+        <div class="footer notselect">
+            <br/>
+            <a target="_blank" href="http://www.miitbeian.gov.cn">@根子科技</a>
+        </div>
+    </form>
+    <script src="/plugs/layui/layui.all.js"></script>
+    <script src="/plugs/require/require.js"></script>
+    <script src="/common/style.js"></script>
+    <script src="/js/login.js"></script>
+</div>
+
+</body>
+</html>

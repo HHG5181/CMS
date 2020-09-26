@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.roots.cms.dao.IUserDao">
+
+    <resultMap id="UserResult" type="com.roots.cms.entity.UserEntity">
+        <id     property="userId"       column="user_id"      />
+        <result property="userName"     column="user_name"    />
+        <result property="nickName"     column="nick_name"    />
+        <result property="password"        column="password"        />
+        <result property="salt"         column="salt"         />
+        <result property="status"       column="status"       />
+        <result property="img"      column="img"     />
+        <result property="loginIp"      column="login_ip"     />
+        <result property="lastLoginTime"    column="last_login_time"   />
+        <result property="createTime"   column="create_time"  />
+        <result property="updateTime"   column="update_time"  />
+        <result property="remark"       column="remark"       />
+        <collection  property="roles" column="role_id"   javaType="java.util.List"   ofType="com.roots.cms.entity.RoleEntity">
+            <result    property="roleId"       column="role_id"        />
+            <result property="roleName"     column="role_name"      />
+            <result property="roleKey"      column="role_key"       />
+            <result property="description"      column="description"       />
+        </collection>
+    </resultMap>
+
+    <sql id="selectUserVo">
+        select  u.user_id, u.user_name, u.nick_name, u.password, u.salt, u.status, u.img, u.login_ip, u.last_login_time, u.create_time, u.update_time, u.remark,
+       		    r.role_id, r.role_name, r.description, r.create_time, r.update_time, r.status
+		from user u
+			 left join user_role ur on u.user_id = ur.user_id
+			 left join role r on r.role_id = ur.role_id
+    </sql>
+
+    <select id="selectUserByUserName" parameterType="String" resultMap="UserResult">
+        <include refid="selectUserVo"/>
+            where u.status = 0 and u.user_name = #{userName}
+    </select>
+
+    <select id="selectUsers" resultMap="UserResult" parameterType="com.roots.cms.entity.UserEntity">
+        select u.*, r.role_id as role_id, r.role_name as role_name, r.role_key as role_key, r.description as description
+        from user u
+        left join user_role ur on u.user_id = ur.user_id
+        left join role r on ur.role_id = r.role_id
+        <if test="status != null and status != '' ">
+            where u.status = #{status}
+        </if>
+        <if test="userName != null and userName != ''">
+            and u.user_name like concat("%", #{userName}, "%")
+        </if>
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != '' ">
+            and u.crate_time between #{beginTime} to #{endTime}
+        </if>
+    </select>
+
+    <update id="updateUser" parameterType="com.roots.cms.entity.UserEntity">
+        update user
+        <set>
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="salt != null and salt != ''">salt = #{salt},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="loginIp != null and loginIp != ''">login_ip = #{loginIp},</if>
+            <if test="img != null and img != ''">img = #{img},</if>
+            <if test="lastLoginTime != null">last_login_time = #{lastLoginTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = sysdate()
+        </set>
+    </update>
+
+    <select id="selectByRoleId" resultMap="UserResult">
+        select u.user_id, u.user_name, u.nick_name, u.password, u.salt, u.status, u.img, u.login_ip, u.last_login_time, u.create_time, u.update_time, u.remark
+        from user u inner join user_role ur on u.user_id = ur.user_id
+        where ur.role_id = #{roleId}
+    </select>
+
+</mapper>

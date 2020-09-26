@@ -1,0 +1,47 @@
+<form class="layui-form layui-card" th:action="@{/admin/perms/edit/{permsId}/(permsId=${perms.permissionId})}" data-auto="true" method="post" autocomplete="off">
+    <div class="layui-card-body">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs8">
+                <div class="layui-col-xs12">
+                    <label class="block relative">
+                        <span class="rt-text-blue rt-text-bold">权限名称</span>
+                        <span class="rt-text-grey margin-left-5">PermissionName</span>
+                        <input name="name" th:value='${perms.name}' required pattern="^.{2,}$" placeholder="请输入权限名称" class="layui-input">
+                        <span class="help-block">用于显示权限</span>
+                    </label>
+                </div>
+                <div class="layui-col-xs12">
+                    <label class="block relative">
+                        <span class="rt-text-blue rt-text-bold">权限标识</span>
+                        <span class="rt-text-grey margin-left-5">perms</span>
+                        <input name="perms" th:value='${perms.perms}' required placeholder="请输入权限标识" class="layui-input">
+                        <span class="help-block">权限标识：(admin:user:list)</span>
+                    </label>
+                </div>
+                <div class="layui-col-xs12">
+                    <label class="block relative">
+                        <span class="rt-text-blue rt-text-bold">访问路径</span>
+                        <span class="rt-text-grey margin-left-5">url</span>
+                        <input name="url" th:value='${perms.url}' required placeholder="请输入访问路径" class="layui-input">
+                        <span class="help-block">访问路径：(/admin/user/list)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <label class="layui-form-item block relative">
+            <span class="rt-text-blue rt-text-bold">权限描述</span><span class="rt-text-grey margin-left-5">Description</span>
+            <textarea placeholder="请输入权限描述" th:text="${perms.description}" class="layui-textarea" name="description"></textarea>
+        </label>
+        <div class="hr-line-dashed"></div>
+        <div class="layui-form-item text-center">
+            <button class="rt-btn rt-blue" type='submit'>保存</button>
+            <button class="rt-btn" type='button' data-close>取消</button>
+        </div>
+    </div>
+</form>
+
+<style>
+    .uploadimage-box{
+        margin: 0 auto;
+    }
+</style>
